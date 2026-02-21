@@ -4,14 +4,13 @@ const newQuoteBtn = document.getElementById("new-quote");
 
 async function fetchQuote() {
   try {
-    const res = await fetch("https://zenquotes.io/api/random");
+    // This is the free Quotable API
+    const res = await fetch("https://api.quotable.io/random");
     if (!res.ok) throw new Error("Network response not ok");
     const data = await res.json();
 
-    // data is an array with one object
-    const q = data[0];
-    quoteEl.textContent = q.q;
-    authorEl.textContent = `— ${q.a}`;
+    quoteEl.textContent = data.content;
+    authorEl.textContent = `— ${data.author}`;
   } catch (err) {
     console.error(err);
     quoteEl.textContent = "Oops! Couldn't fetch a quote.";
@@ -19,8 +18,8 @@ async function fetchQuote() {
   }
 }
 
-// Initial fetch
+// Fetch a quote on page load
 fetchQuote();
 
-// New quote button
+// Fetch a new quote when button is clicked
 newQuoteBtn.addEventListener("click", fetchQuote);
