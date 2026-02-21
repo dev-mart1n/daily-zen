@@ -2,33 +2,24 @@ const quoteEl = document.getElementById("quote");
 const authorEl = document.getElementById("author");
 const newQuoteBtn = document.getElementById("new-quote");
 
-// Local quotes array
-const quotes = [
-  {
-    content: "Keep your face always toward the sunshine.",
-    author: "Walt Whitman",
-  },
-  { content: "The best way out is always through.", author: "Robert Frost" },
-  {
-    content: "Do something today that your future self will thank you for.",
-    author: "Unknown",
-  },
-  { content: "Happiness depends upon ourselves.", author: "Aristotle" },
-  {
-    content: "Positive anything is better than negative nothing.",
-    author: "Elbert Hubbard",
-  },
-];
+async function fetchQuote() {
+  try {
+    const res = await fetch("https://api.quotable.io/random");
+    if (!res.ok) throw new Error("Network response not ok");
+    const data = await res.json();
 
-function getRandomQuote() {
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  const q = quotes[randomIndex];
-  quoteEl.textContent = q.content;
-  authorEl.textContent = `— ${q.author}`;
+    // Display the quote
+    quoteEl.textContent = data.content;
+    authorEl.textContent = `— ${data.author}`;
+  } catch (err) {
+    console.error(err);
+    quoteEl.textContent = "Oops! Couldn't fetch a quote.";
+    authorEl.textContent = "";
+  }
 }
 
-// Show a quote on load
-getRandomQuote();
+// Fetch a quote on page load
+fetchQuote();
 
-// Show a new quote when button clicked
-newQuoteBtn.addEventListener("click", getRandomQuote);
+// Fetch a new quote when button is clicked
+newQuoteBtn.addEventListener("click", fetchQuote);
